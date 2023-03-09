@@ -18,6 +18,7 @@ jobs:
           PY_REPO_VERSION="$REPO"_runner"${{ matrix.python-version }}"
           echo $PY_REPO_VERSION
           PYENV_ROOT="/home/ec2-user/.pyenv/versions/$PY_REPO_VERSION"
+          echo $PYENV_ROOT
           source /etc/profile && source /etc/sysdenv
           load-pyenv
           python -v; which python
