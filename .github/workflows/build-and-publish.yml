@@ -20,9 +20,7 @@ jobs:
           python -v; which python
           pyenv install ${{ matrix.python-version }} -s
           echo "log1"
-          pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} 
-          echo "log2"
-          pyenv local dspyhoconrunner${{ matrix.python-version }}
+          pyenv virtualenv-delete dspyhoconrunner${{ matrix.python-version }} && pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} && pyenv local dspyhoconrunner${{ matrix.python-version }}
           PYENV_ROOT="/home/ec2-user/.pyenv/versions/dspyhoconrunner${{ matrix.python-version }}"
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
