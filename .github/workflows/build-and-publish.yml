@@ -23,7 +23,7 @@ jobs:
           pyenv install ${{ matrix.python-version }} -s
           pyenv virtualenv runner${{ matrix.python-version }} && pyenv local runner${{ matrix.python-version }}
           python_location="$PYENV_ROOT/runner${{ matrix.python-version }}"
-          echo "python_location/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
+          echo "$python_location/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
         run: pip install --upgrade build twine
       - name: Build
