@@ -17,14 +17,14 @@ jobs:
           source /etc/profile && source /etc/sysdenv
           load-pyenv
           python -v; which python
-          echo "log3"
           pyenv install ${{ matrix.python-version }} -s
           echo "log2"
-          pyenv virtualenv dspyhoconrunner 
+          pyenv deactivate
+          pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} 
           echo "log"
-          pyenv local dspyhoconrunner
+          pyenv local dspyhoconrunner${{ matrix.python-version }}
           echo "log1"
-          PYENV_ROOT="/home/ec2-user/.pyenv/versions/dspyhoconrunner"
+          PYENV_ROOT="/home/ec2-user/.pyenv/versions/dspyhoconrunner${{ matrix.python-version }}"
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
         run: pip install --upgrade build twine
