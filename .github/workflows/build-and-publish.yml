@@ -26,8 +26,12 @@ jobs:
           PYENV_ROOT="/home/ec2-user/.pyenv/versions/dspyhoconrunner${{ matrix.python-version }}"
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
-        run: pip install --upgrade build twine
+        run: |
+          which pip
+          pip install --upgrade build twine
       - name: Build
-        run: python -m build
+        run: |
+          which python
+          python -m build
       - name: Deactivate
         run: pyenv deactivate
