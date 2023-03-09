@@ -20,6 +20,7 @@ jobs:
           REPO="ds-pyhocon"
           PY_REPO_VERSION="$REPO"_runner"${{ matrix.python-version }}"
           echo $PY_REPO_VERSION pyrepoversion
+          echo $PYENV_ROOT pyenvroot
           pyenv install ${{ matrix.python-version }} -s
           pyenv virtualenv $PY_REPO_VERSION && pyenv local $PY_REPO_VERSION
           PYENV_ROOT_VAR="/home/ec2-user/.pyenv/versions/$PY_REPO_VERSION"
