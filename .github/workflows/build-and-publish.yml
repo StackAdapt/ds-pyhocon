@@ -15,7 +15,8 @@ jobs:
       - name: setup
         run: |
           REPO="ds-pyhocon"
-          PY_REPO_VERSION=$REPO"_runner"${{ matrix.python-version }}
+          PY_REPO_VERSION="$REPO"_runner"${{ matrix.python-version }}"
+          echo $PY_REPO_VERSION
           PYENV_ROOT="/home/ec2-user/.pyenv/versions/$PY_REPO_VERSION"
           source /etc/profile && source /etc/sysdenv
           load-pyenv
