@@ -19,8 +19,6 @@ jobs:
           python -v; which python
           pyenv install ${{ matrix.python-version }} -s
           echo "log2"
-          pwd
-          pyenv deactivate
           pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} 
           echo "log"
           pyenv local dspyhoconrunner${{ matrix.python-version }}
@@ -31,3 +29,5 @@ jobs:
         run: pip install --upgrade build twine
       - name: Build
         run: python -m build
+      - name: Deactivate
+        run: pyenv deactivate
