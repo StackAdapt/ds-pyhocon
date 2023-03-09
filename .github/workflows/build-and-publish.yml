@@ -15,14 +15,14 @@ jobs:
       - name: setup
         run: |
           source /etc/profile && source /etc/sysdenv
+          pwd
           load-pyenv
           python -v; which python
           pyenv install ${{ matrix.python-version }} -s
-          echo "log2"
-          pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} 
-          echo "log"
-          pyenv local dspyhoconrunner${{ matrix.python-version }}
           echo "log1"
+          pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} 
+          echo "log2"
+          pyenv local dspyhoconrunner${{ matrix.python-version }}
           PYENV_ROOT="/home/ec2-user/.pyenv/versions/dspyhoconrunner${{ matrix.python-version }}"
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
