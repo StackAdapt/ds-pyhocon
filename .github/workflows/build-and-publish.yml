@@ -18,7 +18,8 @@ jobs:
           load-pyenv
           python -v; which python
           echo "log"
-          echo $PWD
+          echo $PYENV_ROOT
+          PYENV_ROOT = $PWD
           echo $PYENV_ROOT
           pyenv install ${{ matrix.python-version }} -s
           pyenv virtualenv runner${{ matrix.python-version }} && pyenv local runner${{ matrix.python-version }}
