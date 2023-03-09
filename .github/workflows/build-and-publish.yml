@@ -17,7 +17,9 @@ jobs:
           source /etc/profile && source /etc/sysdenv
           load-pyenv
           python -v; which python
+          echo "log3"
           pyenv install ${{ matrix.python-version }} -s
+          echo "log2"
           pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} 
           echo "log"
           pyenv local dspyhoconrunner${{ matrix.python-version }}
