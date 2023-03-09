@@ -26,10 +26,9 @@ jobs:
       - name: Pip Install Build Tools
         run: |
           which pip
+          pwd
           pip install --upgrade build twine
       - name: Build
         run: |
           which python
           python -m build
-      - name: Deactivate
-        run: pyenv deactivate
