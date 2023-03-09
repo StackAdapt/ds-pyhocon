@@ -20,11 +20,11 @@ jobs:
           echo "log3"
           pyenv install ${{ matrix.python-version }} -s
           echo "log2"
-          pyenv virtualenv dspyhoconrunner${{ matrix.python-version }} 
+          pyenv virtualenv dspyhoconrunner 
           echo "log"
-          pyenv local dspyhoconrunner${{ matrix.python-version }}
+          pyenv local dspyhoconrunner
           echo "log1"
-          PYENV_ROOT="/home/ec2-user/.pyenv/versions/dspyhoconrunner${{ matrix.python-version }}"
+          PYENV_ROOT="/home/ec2-user/.pyenv/versions/dspyhoconrunner"
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
         run: pip install --upgrade build twine
