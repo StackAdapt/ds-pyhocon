@@ -2,7 +2,8 @@ name: Build the main branch and publish it to artifactory
 
 on:
   push:
-    branches: [ main ]
+    branches: [ darren/change-name ]
+
 jobs:
   build:
     runs-on: self-hosted
@@ -10,8 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ 3.6, 3.7, 3.8, 3.9 ]
-    env:
-      repo: dspyhocon
+      env:
+        repo: dspyhocon
+        virtualenv-name: ${{ env.repo }}runner${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -22,8 +24,8 @@ jobs:
           load-pyenv
           python -v; which python
           pyenv install ${{ matrix.python-version }} -s
-          pyenv virtualenv-delete ${{ env.repo }}runner${{ matrix.python-version }} && pyenv virtualenv ${{ env.repo }}runner${{ matrix.python-version }} && pyenv local ${{ env.repo }}runner${{ matrix.python-version }}
-          PYENV_ROOT="/home/ec2-user/.pyenv/versions/${{ env.repo }}runner${{ matrix.python-version }}"
+          pyenv virtualenv-delete ${{ env.virtualenv-name }} && pyenv virtualenv ${{ env.virtualenv-name }} && pyenv local ${{ env.virtualenv-name }}
+          PYENV_ROOT="/home/ec2-user/.pyenv/versions/${{ env.virtualenv-name }}"
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
         run: |
