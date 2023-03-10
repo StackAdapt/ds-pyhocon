@@ -12,13 +12,11 @@ jobs:
         python-version: [ 3.6, 3.7, 3.8, 3.9 ]
     env:
       repo: dspyhocon
-      working-directory: dspyhocon${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 2
       - name: setup
-        working-directory: ${{ env.working-directory }}
         run: |
           source /etc/profile && source /etc/sysdenv
           load-pyenv
@@ -31,9 +29,7 @@ jobs:
         run: |
           which pip
           pip install --upgrade build twine
-        working-directory: ${{ env.working-directory }}
       - name: Build
         run: |
           which python
           python -m build
-        working-directory: ${{ env.working-directory }}
