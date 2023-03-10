@@ -23,7 +23,7 @@ jobs:
           load-pyenv
           python -v; which python
           pyenv install ${{ matrix.python-version }} -s
-          pyenv virtualenv-delete VIRTUAL_ENV && pyenv virtualenv VIRTUAL_ENV && pyenv local VIRTUAL_ENV
+          pyenv virtualenv-delete $VIRTUAL_ENV && pyenv virtualenv $VIRTUAL_ENV && pyenv local $VIRTUAL_ENV
           PYENV_ROOT="/home/ec2-user/.pyenv/versions/"$VIRTUAL_ENV
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
