@@ -3,7 +3,6 @@ name: Build the main branch and publish it to artifactory
 on:
   push:
     branches: [ main ]
-
 jobs:
   build:
     runs-on: self-hosted
@@ -11,19 +10,29 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ 3.6, 3.7, 3.8, 3.9 ]
+    env:
+      repo: dspyhocon
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
       - name: setup
         run: |
+          VIRTUAL_ENV=${{ env.repo }}runner${{ matrix.python-version }}
           source /etc/profile && source /etc/sysdenv
           load-pyenv
           python -v; which python
           pyenv install ${{ matrix.python-version }} -s
-          pyenv virtualenv runner${{ matrix.python-version }} && pyenv local runner${{ matrix.python-version }}
-          PYENV_ROOT="/home/ec2-user/.pyenv/versions/runner${{ matrix.python-version }}"
+          pyenv virtualenv-delete $VIRTUAL_ENV && pyenv virtualenv $VIRTUAL_ENV && pyenv local $VIRTUAL_ENV
+          PYENV_ROOT="/home/ec2-user/.pyenv/versions/"$VIRTUAL_ENV
           echo "$PYENV_ROOT/bin:/home/ec2-user/.local/bin:$PATH" >> $GITHUB_PATH
       - name: Pip Install Build Tools
-        run: pip install --upgrade build twine
+        run: |
+          which pip
+          pip install --upgrade build twine
       - name: Build
-        run: python -m build
+        run: |
+          which python
+          python -m build
       - name: Publish
         run: twine upload --repository-url $ARTIFACTORY_URL dist/* -u $ARTIFACTORY_ROLE -p $ARTIFACTORY_AUTH
