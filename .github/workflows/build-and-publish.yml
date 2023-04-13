@@ -36,7 +36,7 @@ jobs:
       - name: Pip Install Build Tools
         run: |
           source /etc/machine && load-pyenv
-          pip install --upgrade build twine
+          pip install --upgrade pip build twine
       - name: Build
         run: |
           source /etc/machine && load-pyenv
