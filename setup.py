@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 
-NAME = "stackadapt.ds-pyhocon"
+NAME = "stackadapt.ds.pyhocon"
 VERSION = "1.1.1"
 URL = "https://github.com/StackAdapt/ds-pyhocon"
 PACKAGES = find_packages(include=["ds_pyhocon", "ds_pyhocon.*"])
