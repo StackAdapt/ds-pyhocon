@@ -3,8 +3,6 @@ name: Build the main branch and publish it to artifactory
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
