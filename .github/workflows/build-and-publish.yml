@@ -15,6 +15,7 @@ jobs:
         python-version: [ 3.7, 3.8, 3.9 ]
     env:
       repo: dspyhocon
+      artifactory-url: https://artifactory.stackadapt.dev/artifactory/api/pypi/pypi/
     steps:
       - name: Load Artifactory credentials
         run: |
@@ -67,4 +68,4 @@ jobs:
       - name: Publish
         run: |
           source .$VIRTUAL_ENV/bin/activate
-          twine upload --repository-url $ARTIFACTORY_URL dist/* -u $ARTIFACTORY_ROLE -p $ARTIFACTORY_AUTH
+          twine upload --repository-url ${{ env.artifactory-url }} dist/* -u $ARTIFACTORY_USER -p $ARTIFACTORY_TOKEN
