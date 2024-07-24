@@ -3,23 +3,47 @@ name: Build the main branch and publish it to artifactory
 on:
   push:
     branches: [ main ]
+
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ds-pyhocon-runner
     strategy:
       fail-fast: false
       matrix:
         python-version: [ 3.7, 3.8, 3.9 ]
     env:
       repo: dspyhocon
+      artifactory-url: https://artifactory.stackadapt.dev/artifactory/api/pypi/pypi/
     steps:
-      - uses: actions/checkout@v3
+      - name: Load Artifactory credentials
+        run: |
+          echo "::add-mask::$access_token"
+          echo "ARTIFACTORY_TOKEN=$access_token" >> $GITHUB_ENV
+          echo "::add-mask::$username"
+          echo "ARTIFACTORY_USER=$username" >> $GITHUB_ENV
+      - name: Set up pip config
+        run: |
+          mkdir -p ~/.pip
+          sudo tee ~/.pip/pip.conf > /dev/null <<- EOL
+          [global]
+          extra-index-url = https://${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}@artifactory.stackadapt.dev/artifactory/api/pypi/pypi/simple
+          
+          EOL
+      - name: Checkout Code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
+      - name: Set up pyenv
+        uses: gabrielfalcao/pyenv-action@v18
+        with:
+          default: ${{ matrix.python-version }}
+          command: |
+            pip install -U pip setuptools
+            git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+            eval "$(pyenv            init --path)"
+            eval "$(pyenv            init -     )"
       - name: setup
         run: |
-          source /etc/machine && load-pyenv
-
           # pyenv requires python version accurates to minor, so 3.8 => 3.8.16 and 3.8.12 => 3.8.12
           PYTHON_VERSION=$(pyenv latest -k ${{ matrix.python-version }})
 
@@ -27,19 +51,19 @@ jobs:
           pyenv install $PYTHON_VERSION -s
 
           # recreate virtual env and activate the virtual env
-          VIRTUAL_ENV=${{ env.repo }}"_"${{ runner.name }}"_"$PYTHON_VERSION
-          pyenv virtualenv-delete -f $VIRTUAL_ENV
-          pyenv virtualenv $PYTHON_VERSION $VIRTUAL_ENV
-          pyenv local $VIRTUAL_ENV
+          VIRTUAL_ENV="${{ env.repo }}_${{ runner.name }}_${PYTHON_VERSION}"
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+          pyenv local $PYTHON_VERSION && python -mvenv .$VIRTUAL_ENV
+          source .$VIRTUAL_ENV/bin/activate
       - name: Pip Install Build Tools
         run: |
-          source /etc/machine && load-pyenv
+          source .$VIRTUAL_ENV/bin/activate
           pip install --upgrade build twine==3.7.1 "urllib3<2"
       - name: Build
         run: |
-          source /etc/machine && load-pyenv
+          source .$VIRTUAL_ENV/bin/activate
           python -m build
       - name: Publish
         run: |
-          source /etc/machine && load-pyenv
-          twine upload --repository-url $ARTIFACTORY_URL dist/* -u $ARTIFACTORY_ROLE -p $ARTIFACTORY_AUTH
+          source .$VIRTUAL_ENV/bin/activate
+          twine upload --repository-url ${{ env.artifactory-url }} dist/* -u $ARTIFACTORY_USER -p $ARTIFACTORY_TOKEN
